@@ -1,0 +1,21 @@
+{
+    "app_name":"/freight-app",
+    "app_base":"/api",
+    "app_version":"/v1",
+    "mongodb":{
+        "db":"smartsky",
+        "host":"127.0.0.1",
+        "port":"27017",
+        "username":""
+    },
+    "templates": {
+        "confirmation":"confirmation"
+    },
+    "emails":{
+        "info":"info@smartsky.ng"
+    },
+    "subject":{
+        "confirmation":"New User Confirmation"
+    },
+    "site_url":"http://localhost:16630/freight-app"
+}

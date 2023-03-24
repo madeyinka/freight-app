@@ -1,0 +1,38 @@
+service: freight-app
+frameworkVersion: '3'
+provider:
+  name: aws
+  runtime: nodejs16.x
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${self:custom.profiles.${self:provider.stage}}
+  deploymentBucket:
+    name: smartsky-app
+
+plugins:
+  - serverless-dotenv
+  - serverless-offline
+  - serverless-deployment-bucket
+
+custom:
+  defaultStage: dev
+  profiles:
+    dev: PrivateServer
+    prod: PrivateServer
+  fileUploadBucketName: smartsky-assets
+  serverless-offline:
+    noPrependStageInUrl: true
+    httpPort: 16630
+
+functions:
+  api:
+    handler: api.handler
+    events:
+      - httpApi:
+          path: /freight-app/api/v1/auth/register
+          method: post
+      - httpApi:
+          path: /freight-app/api/v1/auth/profile-update/{user}/{key}
+          method: post
+      - httpApi:
+          path: /freight-app/api/v1/auth/login
+          method: post
