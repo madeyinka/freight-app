@@ -53,7 +53,7 @@ const AuthInit = {
                 if (err)
                     return callback(Resp.error({msg:"User not found", resp:null}))
                 else {
-                    if (match_key(key, user.key)){
+                    if (Util.match_key(key, user.key)){
                         data.key = Util.rand_str(10)
                         userModel.findByIdAndUpdate(id, data, {new:true}, (err, resp) => {
                             if (err)
@@ -67,6 +67,31 @@ const AuthInit = {
             })
         } else 
             return callback(Resp.error({msg:"Invalid Parameter", resp:error}))
+    },
+
+    _login_user: (param, callback) => {
+        const error = []
+        if (!param.email)error.push('Email is required')
+        if (!param.password)error.push('Password is required')
+
+        if (error.length === 0) {
+            userModel.findOne({email:param.email}).exec((err, user) => {
+                if (err)
+                    return callback(Resp.error({msg:'User not found.', resp:null}))
+                Util.compare_pass(param.password, user.password, (match) => {
+                    if (match) {
+                        if (user.status) {
+                            const payload = {}
+                            Util.tokenize(payload, (token) => {
+                                return callback(Resp.success({msg:'Login Successful', resp:token}))
+                            })
+                        } else 
+                            return callback(Resp.error({msg:'Account not activated', resp:null}))
+                    } else 
+                        return callback(Resp.error({msg:'Invalid Credentials', resp:null}))
+                })
+            })
+        }
     }
 }
 

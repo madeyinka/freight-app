@@ -16,4 +16,10 @@ router.post('/profile-update/:user/:key', (req, res) => {
     })
 })
 
+router.post('/login/user', (req, res) => {
+    authDAO._login_user(Util.param_extract(req), (state) => {
+        Util.resp(res).json(state)
+    })
+})
+
 module.exports = router

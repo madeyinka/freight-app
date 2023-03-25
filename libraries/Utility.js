@@ -1,3 +1,5 @@
+const dotenv = require('dotenv').config()
+
 const Util = {
     param_extract: (req) => {
         let data = {}
@@ -32,9 +34,21 @@ const Util = {
     },
 
     hash_password: (value) => {
-        const jwt = require('bcryptjs')
+        const bcrypt = require('bcryptjs')
         const salt = bcrypt.genSaltSync(10)
         return bcrypt.hashSync(value, salt)
+    },
+
+    compare_pass: (pass1, pass2, callback) => {
+        const bcrypt = require('bcryptjs')
+        const result = bcrypt.compareSync(pass1, pass2)
+        return callback(result)
+    },
+
+    tokenize: (payload, callback) => {
+        const jwt = require('jsonwebtoken')
+        const token = jwt.sign(payload, process.env.JWT_KEY, {expiresIn: process.env.JWT_EXPIRY})
+        return callback(token)
     }
 }
 

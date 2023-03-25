@@ -34,5 +34,5 @@ functions:
           path: /freight-app/api/v1/auth/profile-update/{user}/{key}
           method: post
       - httpApi:
-          path: /freight-app/api/v1/auth/login
+          path: /freight-app/api/v1/auth/login/user
           method: post
