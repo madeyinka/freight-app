@@ -15,19 +15,19 @@ const AuthInit = {
         if (error.length === 0) {
             const data = {firstname:param.firstname, lastname:param.lastname, email:param.email, key:Util.rand_str(10)}
             userModel.create(data, (err, resp) => {
-                if (err)
-                    return callback(Resp.error({msg:'Could not submit data', resp:null}))
-                else {
-                    //initiate email trigger here...
+                if (resp) {
                     const link = _config.site_url+'?user='+resp._id+'&key='+resp.key
                     const mailOption = {sender:_config.emails.info, recipient:[resp.email], subject:_config.subject.confirmation,
                                         msg:{firstname:resp.firstname, link:link}, template:_config.templates.confirmation }
-                    sendMail(mailOption, (resp) => {
-                        if (resp) 
+                    sendMail(mailOption, (state) => {
+                        console.log(state)
+                        if (state) 
                             return callback(Resp.success({msg:'Success, Check your mail to complete registration', resp:resp}))
                         else
                             return callback(Resp.error({msg:"Colud not send e-mail at this time.", resp:null}))
                     })
+                } else {
+                    return callback(Resp.error({msg:'Could not submit data', resp:null}))
                 }
             })
         } else {
